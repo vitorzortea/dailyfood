@@ -1,0 +1,32 @@
+<div *ngIf="isload">
+    <header id="header-detail">
+        <h2>{{calendario.nome}} de {{calendario.ano}} </h2>
+        <a routerLink="/">Voltar</a>
+    </header>
+    <div id="list-dia">
+        <div *ngFor="let dia of calendario.dias; let i=index">
+            <header>
+                <h3>{{dia.nome}}</h3>
+                <button (click)="deleteDia(i)"><i class="fa-solid fa-delete-left"></i></button>
+            </header>
+            <div>
+                <div class="item" *ngFor="let refeicao of dia.refeicoes; let f=index">
+                    <button (click)="deleteRefeicao(i,f)" ><i class="fa-solid fa-delete-right"></i></button>
+                    <div>
+                        <h4>{{refeicao.hora}}</h4>
+                        <p>{{refeicao.prato}}</p>
+                    </div>
+                    <ng-container *ngIf="refeicao.foto">
+                        <div class="foto" (click)="openImage(refeicao.foto)">
+                            <img [src]="refeicao.foto">
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="!refeicao.foto"><div class="foto"></div></ng-container>
+                </div>
+            </div>
+            <button (click)="createRefeicao(i)"><i class="fa-solid fa-plus"></i> Adicionar Refeição</button>
+        </div>
+
+        <button id="newCard" (click)="createDia()"><i class="fa-solid fa-plus"></i> Adicionar Dia</button>
+    </div>
+</div>

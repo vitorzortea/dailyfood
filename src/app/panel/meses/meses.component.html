@@ -1,0 +1,13 @@
+<div id="list-meses">
+    <div *ngFor="let mes of meses">
+        <header>
+            <h2>{{convertMes(mes.nome)}} <span>{{mes.ano}}</span></h2>
+        </header>
+        <div>
+            <a [routerLink]="['mes/'+mes.calendario]" >Entrar</a>
+            <button (click)="deleteMes(mes.id)" >Deletar</button>
+            <button><i class="fa-duotone fa-toggle-large-on"></i>Visto</button>
+        </div>
+    </div>
+    <button id="newCard" (click)="createMes()"><i class="fa-solid fa-plus"></i> Adicionar Dia</button>
+</div>
