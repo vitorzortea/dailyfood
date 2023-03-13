@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs';
 import { Calendario } from 'src/app/models/tables.model';
 import { CalendarioService } from 'src/app/services/calendario.service';
+import { CompressImageService } from 'src/app/services/compress-image-service.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,6 +23,7 @@ export class MesComponent implements OnInit {
   constructor(
     private service: CalendarioService,
     private route: ActivatedRoute,
+    private compressImage: CompressImageService,
     private router: Router
   ) { }
 
@@ -86,13 +89,19 @@ export class MesComponent implements OnInit {
         const fotoFile = document.querySelector('#foto-input') as HTMLInputElement;
         if(horaValue.value && comidaValue.value){
           if(fotoFile.files[0]){
-            this.getBase64(fotoFile.files[0]).then(
-              (data)=>{
-                this.calendario.dias[index].refeicoes.push( { hora:horaValue.value, prato:comidaValue.value, foto:data as string, } );
-                this.calendario.dias[index].refeicoes = this.calendario.dias[index].refeicoes.sort((a,b) => parseInt(a.hora.replace(/[^0-9]/g,'')) - parseInt(b.hora.replace(/[^0-9]/g,'')));
-                this.service.createOrUpdate(this.calendario).then(()=>{/*this.updateList()*/})
-              }
-            );
+            const image: File = fotoFile.files[0];
+            this.compressImage.compress(image)
+            .pipe(take(1))
+            .subscribe(compressedImage => {
+              console.log(`Image size after compressed: ${compressedImage.size} bytes.`)
+              this.getBase64(compressedImage).then(
+                (data)=>{
+                  this.calendario.dias[index].refeicoes.push( { hora:horaValue.value, prato:comidaValue.value, foto:data as string, } );
+                  this.calendario.dias[index].refeicoes = this.calendario.dias[index].refeicoes.sort((a,b) => parseInt(a.hora.replace(/[^0-9]/g,'')) - parseInt(b.hora.replace(/[^0-9]/g,'')));
+                  this.service.createOrUpdate(this.calendario).then(()=>{/*this.updateList()*/})
+                }
+              );
+            });
           }else{
             this.calendario.dias[index].refeicoes.push({ hora:horaValue.value, prato:comidaValue.value, foto:''});
             this.calendario.dias[index].refeicoes = this.calendario.dias[index].refeicoes.sort((a,b) => parseInt(a.hora.replace(/[^0-9]/g,'')) - parseInt(b.hora.replace(/[^0-9]/g,'')));
