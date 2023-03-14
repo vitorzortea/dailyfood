@@ -16,3 +16,10 @@ export class Calendario extends Model {
     }
   ];
 }
+
+export class Refeicoes extends Model {
+  hora: string;
+  prato: string;
+  foto?: any ;
+}
+

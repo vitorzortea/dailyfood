@@ -14,7 +14,7 @@ export abstract class ServiceFirebase<T extends Model> implements ICrud<T> {
     this.ref = this.firestore.collection<T>(this.caminho);
   }
 
-  get(id: string): Observable<T> {
+  get(id: any): Observable<T> {
     let doc = this.ref.doc<T>(id);
     return doc.get().pipe(map(snapshot => this.docToClass(snapshot)));
   }
@@ -34,12 +34,12 @@ export abstract class ServiceFirebase<T extends Model> implements ICrud<T> {
     else
       obj = item;
     if (id) {
-      return this.ref.doc(id).set(obj);
+      return this.ref.doc(id).set(obj, { merge: true });
     }
     else
       return this.ref.add(obj).then(res => {
         obj.id = res.id; // Para salvar com o atributo id
-        this.ref.doc(res.id).set(obj);
+        this.ref.doc(res.id).set(obj, { merge: true });
       })
   }
 

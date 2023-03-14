@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs'
 
 // in bytes, compress images larger than 1MB
-const fileSizeMax = 1 * 900 * 900
+const fileSizeMax = 1 * 500 * 500
 // in pixels, compress images have the width or height larger than 1024px
-const widthHeightMax = 900
-const defaultWidthHeightRatio = 1
+const widthHeightMax = 500
+const defaultWidthHeightRatio = 0.8
 const defaultQualityRatio = 0.7
 
 @Injectable({
@@ -34,8 +34,10 @@ export class CompressImageService {
         img.onload = () => { 
           const elem = document.createElement('canvas')
           // resize width, height
-          elem.width = img.width * withHeightRatio
-          elem.height = img.height * withHeightRatio
+          elem.width = 500     // W (img.width * withHeightRatio)     H (img.height * withHeightRatio)
+          elem.height = (500/(img.width * withHeightRatio)) * (img.height * withHeightRatio);
+
+          console.log('teste img:', elem);
 
           const ctx = <CanvasRenderingContext2D>elem.getContext('2d')
           ctx.drawImage(img, 0, 0, elem.width, elem.height)
