@@ -9,6 +9,7 @@ export class Mes extends Model {
 export class Calendario extends Model {
   nome: string;
   ano: string;
+  observacao: string;
   dias: [
     {
       nome:string;

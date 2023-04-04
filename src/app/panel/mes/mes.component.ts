@@ -145,6 +145,7 @@ export class MesComponent implements OnInit {
     this.isload = false;
     this.service.get(this.id).subscribe(res=>{
       this.calendario = JSON.parse(JSON.stringify(res));
+      if(!this.calendario.observacao){ this.calendario.observacao = ''; }
       if(!this.calendario.dias.length){this.isload = true;}
       res.dias.forEach((e,i)=>{
         if(res.dias.length == (i+1)){
@@ -193,6 +194,19 @@ export class MesComponent implements OnInit {
         })
       }
     });
+  }
+  salvarObservacao(){
+    console.log("Teste: ", this.calendario);
+    this.service.createOrUpdate(this.calendario).then(()=>{
+      this.updateList();
+      Swal.fire({icon: 'success',title: 'Observação Salva com sucesso'})
+    })
+  }
+
+  
+  convertMes(mesSelect):string{
+    const mesesString = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+    return mesesString[mesSelect - 1];
   }
   
 }

@@ -1,8 +1,9 @@
 <div *ngIf="isload">
     <header id="header-detail">
-        <h2>{{calendarioPrint.nome}} de {{calendarioPrint.ano}} </h2>
+        <h2>{{convertMes(calendarioPrint.nome)}} de {{calendarioPrint.ano}} </h2>
         <a routerLink="/">Voltar</a>
     </header>
+    
     <div id="list-dia">
         <div *ngFor="let dia of calendarioPrint.dias; let i=index">
             <header>
@@ -29,4 +30,11 @@
 
         <button id="newCard" (click)="createDia()"><i class="fa-solid fa-plus"></i> Adicionar Dia</button>
     </div>
+
+    <div id="observacao">
+        <h3>Observações</h3>
+        <textarea [(ngModel)]="calendario.observacao">{{calendario.observacao}}</textarea>
+        <button (click)="salvarObservacao()">Salvar Observação</button>
+    </div>
+    
 </div>
